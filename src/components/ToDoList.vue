@@ -3,10 +3,13 @@
   <input type="text" placeholder="请输入代办事项" v-model="newToDo" @keyup.enter="addToDo"/>
   <!--代办列表-->
   <ul>
-    <li v-for="item in ToDoList" :key="item.id" @click="changeToDo(item.id)">
+    <li v-for="item in ToDoList" :key="item.id" @dblclick="changeToDo(item.id)">
       {{ item.content }}
-      <button @click.stop="deleteToDo(item.id)">X</button>
-      <input type="text" @keyup.esc.stop="changeToDo(item.id)" @blur="changeToDo(item.id)" v-model="newToDo">
+      <button @click.stop="deleteToDo(item)">X</button>
+      <input type="text" v-model="oldToDo"
+             @keyup.esc.stop="serveChangeToDo(item.id)"
+             @keyup.enter="serveChangeToDo(item.id)"
+             @blur="serveChangeToDo(item.id)">
     </li>
   </ul>
 </template>
@@ -18,8 +21,9 @@ export default {
   name: "ToDoList",
   setup() {
     const state = reactive({
+      ToDoList: [],
       newToDo: "",
-      ToDoList: []
+      oldToDo: "",
     })
 
     // 增加todo
@@ -35,21 +39,27 @@ export default {
     }
 
     // 删除todo
-    function deleteToDo(index) {
-      state.ToDoList.splice(index, 1)
+    function deleteToDo(item) {
+      state.ToDoList.splice(state.ToDoList.indexOf(item),1)
+    }
+
+    // 选择修改todo
+    function changeToDo(index) {
+      state.oldToDo = state.ToDoList[index].content
     }
 
     // 修改todo
-    function changeToDo(index) {
-      state.ToDoList[index].content = state.newToDo
-      state.newToDo = ''
+    function serveChangeToDo(index) {
+      state.ToDoList[index].content = state.oldToDo
+      state.oldToDo = ""
     }
 
     return {
       ...toRefs(state),
       addToDo,
       deleteToDo,
-      changeToDo
+      changeToDo,
+      serveChangeToDo
     }
   }
 }
