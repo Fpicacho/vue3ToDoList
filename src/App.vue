@@ -1,5 +1,4 @@
 <script setup>
-// import HelloWorld from './components/HelloWorld.vue'
 import ToDoList from "./components/ToDoList.vue";
 </script>
 
@@ -8,5 +7,12 @@ import ToDoList from "./components/ToDoList.vue";
 </template>
 
 <style>
+* {
+  margin: 0;
+  padding: 0;
+}
 
+ul, li {
+  list-style: none;
+}
 </style>
