@@ -3,7 +3,7 @@
   <input type="text" placeholder="请输入代办事项" v-model="newToDo" @keyup.enter="addToDo"/>
   <!--代办列表-->
   <ul>
-    <li v-for="item in ToDoList" :key="item.id" @dblclick.stop="changeToDo(item.id)">
+    <li v-for="item in filterTodoList" :key="item.id" @dblclick.stop="changeToDo(item.id)">
       <div v-if="!item.isEdit">
         <input type="checkbox" v-model="item.isDone">
         <span :class="{doneTure:item.isDone}">{{ item.content }}</span>
@@ -19,9 +19,9 @@
     </li>
   </ul>
   <div>
-    <button>全部</button>
-    <button>已完成</button>
-    <button>未完成</button>
+    <button @click="filterTodo('all')">全部</button>
+    <button @click="filterTodo('DoneTrue')">已完成</button>
+    <button @click="filterTodo('DoneFalse')">未完成</button>
   </div>
 </template>
 
@@ -32,6 +32,7 @@ export default {
   name: "ToDoList",
   setup() {
     const state = reactive({
+      filterTodoList:[],
       ToDoList: [],
       newToDo: "",
       oldToDo: "",
@@ -48,6 +49,7 @@ export default {
           }
       )
       state.newToDo = ''
+      state.filterTodoList = state.ToDoList
     }
 
     // 删除todo
@@ -67,12 +69,30 @@ export default {
       state.ToDoList[index].content = state.oldToDo
     }
 
+    // 筛选
+    function filterTodo(type){
+      if (type === 'all'){
+         state.filterTodoList = state.ToDoList.filter((item)=>{
+           return item
+        })
+      }else if(type === 'DoneTrue'){
+        state.filterTodoList = state.ToDoList.filter((item)=>{
+          return item.isDone === true
+        })
+      }else{
+        state.filterTodoList = state.ToDoList.filter((item)=>{
+          return item.isDone === false
+        })
+      }
+    }
+
     return {
       ...toRefs(state),
       addToDo,
       deleteToDo,
       changeToDo,
-      serveChangeToDo
+      serveChangeToDo,
+      filterTodo
     }
   }
 }
