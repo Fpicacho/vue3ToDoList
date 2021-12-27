@@ -13,6 +13,7 @@
           class="reviseInput"
           type="text"
           v-model="oldToDo"
+          v-todo-focus="item === modifiedItem"
           @keyup.esc="serveChangeToDo(item)"
           @blur="serveChangeToDo(item)"
           @keyup.enter.stop="serveChangeToDo(item)">
@@ -28,6 +29,7 @@
 <script>
 import {reactive, toRefs} from 'vue'
 
+let directives;
 export default {
   name: "ToDoList",
   setup() {
@@ -96,6 +98,13 @@ export default {
       changeToDo,
       serveChangeToDo,
       filterTodo,
+    }
+  },
+  directives:{
+    "todo-focus":(el,{value})=>{
+      if(value){
+        el.focus()
+      }
     }
   }
 }
