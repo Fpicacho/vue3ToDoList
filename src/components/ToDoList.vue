@@ -3,7 +3,8 @@
   <input type="text" placeholder="请输入代办事项" v-model="newToDo" @keyup.enter="addToDo"/>
   <!--代办列表-->
   <ul>
-    <li v-for="item in filterTodoList" :key="item.id" @dblclick.stop="changeToDo(item)" :class="{isEdit:item === modifiedItem}">
+    <li v-for="item in filterTodoList" :key="item.id" @dblclick.stop="changeToDo(item)"
+        :class="{isEdit:item === modifiedItem}">
       <div class="todoInput">
         <input type="checkbox" v-model="item.isDone">
         <span :class="{doneTure:item.isDone}">{{ item.content }}</span>
@@ -27,18 +28,30 @@
 </template>
 
 <script>
-import {reactive, toRefs} from 'vue'
+import {reactive, toRefs, watchEffect} from 'vue'
 
-let directives;
+const todoStorage = {
+  fetch() {
+    let todos = JSON.parse(localStorage.getItem('vue3-todos') || "[]")
+    todos.forEach((todo, index) => {
+      todo.id = index + 1
+    })
+    return todos
+  },
+  save(todos) {
+    localStorage.setItem('vue3-todos',JSON.stringify(todos))
+  }
+}
+
 export default {
   name: "ToDoList",
   setup() {
     const state = reactive({
-      filterTodoList:[],
-      ToDoList: [],
+      filterTodoList: [],
+      ToDoList: todoStorage.fetch(),
       newToDo: "",
       oldToDo: "",
-      modifiedItem:""
+      modifiedItem: ""
     })
 
     // 增加todo
@@ -75,22 +88,24 @@ export default {
     }
 
     // 筛选
-    function filterTodo(type){
-      if (type === 'all'){
-         state.filterTodoList = state.ToDoList.filter((item)=>{
-           return item
+    function filterTodo(type) {
+      if (type === 'all') {
+        state.filterTodoList = state.ToDoList.filter((item) => {
+          return item
         })
-      }else if(type === 'DoneTrue'){
-        state.filterTodoList = state.ToDoList.filter((item)=>{
+      } else if (type === 'DoneTrue') {
+        state.filterTodoList = state.ToDoList.filter((item) => {
           return item.isDone === true
         })
-      }else{
-        state.filterTodoList = state.ToDoList.filter((item)=>{
+      } else {
+        state.filterTodoList = state.ToDoList.filter((item) => {
           return item.isDone === false
         })
       }
     }
-
+    watchEffect(()=>{
+      todoStorage.save(state.ToDoList)
+    })
     return {
       ...toRefs(state),
       addToDo,
@@ -100,9 +115,9 @@ export default {
       filterTodo,
     }
   },
-  directives:{
-    "todo-focus":(el,{value})=>{
-      if(value){
+  directives: {
+    "todo-focus": (el, {value}) => {
+      if (value) {
         el.focus()
       }
     }
@@ -110,17 +125,20 @@ export default {
 }
 </script>
 
-<style scoped >
-.doneTure{
+<style scoped>
+.doneTure {
   text-decoration: line-through;
 }
-.reviseInput{
+
+.reviseInput {
   display: none;
 }
-.isEdit .reviseInput{
+
+.isEdit .reviseInput {
   display: block;
 }
-.isEdit .todoInput{
+
+.isEdit .todoInput {
   display: none;
 }
 </style>
