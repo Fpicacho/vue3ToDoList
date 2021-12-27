@@ -3,19 +3,19 @@
   <input type="text" placeholder="请输入代办事项" v-model="newToDo" @keyup.enter="addToDo"/>
   <!--代办列表-->
   <ul>
-    <li v-for="item in filterTodoList" :key="item.id" @dblclick.stop="changeToDo(item.id)">
-      <div v-if="!item.isEdit">
+    <li v-for="item in filterTodoList" :key="item.id" @dblclick.stop="changeToDo(item)" :class="{isEdit:item === modifiedItem}">
+      <div class="todoInput">
         <input type="checkbox" v-model="item.isDone">
         <span :class="{doneTure:item.isDone}">{{ item.content }}</span>
         <button @click.stop="deleteToDo(item)">X</button>
       </div>
       <input
-          v-if="item.isEdit"
+          class="reviseInput"
           type="text"
           v-model="oldToDo"
-          @keyup.esc="serveChangeToDo(item.id)"
-          @keyup.enter="serveChangeToDo(item.id)"
-          @blur="serveChangeToDo(item.id)">
+          @keyup.esc="serveChangeToDo(item)"
+          @blur="serveChangeToDo(item)"
+          @keyup.enter.stop="serveChangeToDo(item)">
     </li>
   </ul>
   <div>
@@ -36,6 +36,7 @@ export default {
       ToDoList: [],
       newToDo: "",
       oldToDo: "",
+      modifiedItem:""
     })
 
     // 增加todo
@@ -58,15 +59,17 @@ export default {
     }
 
     // 选择修改todo
-    function changeToDo(index) {
-      state.ToDoList[index].isEdit = !state.ToDoList[index].isEdit
-      state.oldToDo = state.ToDoList[index].content
+    function changeToDo(item) {
+      // state.ToDoList[index].isEdit = !state.ToDoList[index].isEdit
+      // state.oldToDo = state.ToDoList[index].content
+      state.modifiedItem = item
+      state.oldToDo = item.content
     }
 
     // 修改todo
-    function serveChangeToDo(index) {
-      state.ToDoList[index].isEdit = false
-      state.ToDoList[index].content = state.oldToDo
+    function serveChangeToDo(item) {
+      item.content = state.oldToDo
+      state.modifiedItem = ""
     }
 
     // 筛选
@@ -92,7 +95,7 @@ export default {
       deleteToDo,
       changeToDo,
       serveChangeToDo,
-      filterTodo
+      filterTodo,
     }
   }
 }
@@ -101,5 +104,14 @@ export default {
 <style scoped >
 .doneTure{
   text-decoration: line-through;
+}
+.reviseInput{
+  display: none;
+}
+.isEdit .reviseInput{
+  display: block;
+}
+.isEdit .todoInput{
+  display: none;
 }
 </style>
