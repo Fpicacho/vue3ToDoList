@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import {reactive, toRefs, watchEffect} from 'vue'
+import {reactive, toRefs, watchEffect,onMounted} from 'vue'
 
 const todoStorage = {
   fetch() {
@@ -103,6 +103,9 @@ export default {
         })
       }
     }
+    onMounted(()=>{
+      state.filterTodoList = state.ToDoList
+    })
     watchEffect(()=>{
       todoStorage.save(state.ToDoList)
     })
