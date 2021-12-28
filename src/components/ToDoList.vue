@@ -11,9 +11,9 @@
       <li v-for="item in filterTodoList" :key="item.id" @dblclick.stop="changeToDo(item)"
           :class="{isEdit:item === modifiedItem}">
         <div class="todoInput">
-          <button @click.stop="deleteToDo(item)">X</button>
-          <input type="checkbox" v-model="item.isDone">
+          <input type="checkbox" v-model="item.isDone" style="display: inline-block;width: 2vh" @dblclick.stop>
           <span :class="{doneTure:item.isDone}">{{ item.content }}</span>
+          <button @click.stop="deleteToDo(item)">X</button>
         </div>
         <input
             class="reviseInput"
@@ -192,6 +192,17 @@ export default {
     li{
       margin-top: 1vh;
       background: #21212b;
+      color: white;
+      padding: 0 2vh;
+      .todoInput{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    button{
+      height: 3vh;
+      width: 3vh;
     }
   }
 }
