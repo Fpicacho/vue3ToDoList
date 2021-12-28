@@ -128,7 +128,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .doneTure {
   text-decoration: line-through;
 }
@@ -144,4 +144,6 @@ export default {
 .isEdit .todoInput {
   display: none;
 }
+
+
 </style>

@@ -6,13 +6,7 @@ import ToDoList from "./components/ToDoList.vue";
   <ToDoList/>
 </template>
 
-<style>
-* {
-  margin: 0;
-  padding: 0;
-}
+<style lang="scss">
+@import "./assets/css/Global.css";
 
-ul, li {
-  list-style: none;
-}
 </style>
