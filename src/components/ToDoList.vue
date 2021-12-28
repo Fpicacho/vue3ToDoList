@@ -1,29 +1,35 @@
 <template>
-  <!--待办输入框-->
-  <input type="text" placeholder="请输入代办事项" v-model="newToDo" @keyup.enter="addToDo"/>
-  <!--代办列表-->
-  <ul>
-    <li v-for="item in filterTodoList" :key="item.id" @dblclick.stop="changeToDo(item)"
-        :class="{isEdit:item === modifiedItem}">
-      <div class="todoInput">
-        <input type="checkbox" v-model="item.isDone">
-        <span :class="{doneTure:item.isDone}">{{ item.content }}</span>
-        <button @click.stop="deleteToDo(item)">X</button>
-      </div>
-      <input
-          class="reviseInput"
-          type="text"
-          v-model="oldToDo"
-          v-todo-focus="item === modifiedItem"
-          @keyup.esc="serveChangeToDo(item)"
-          @blur="serveChangeToDo(item)"
-          @keyup.enter.stop="serveChangeToDo(item)">
-    </li>
-  </ul>
-  <div>
-    <button @click="filterTodo('all')">全部</button>
-    <button @click="filterTodo('DoneTrue')">已完成</button>
-    <button @click="filterTodo('DoneFalse')">未完成</button>
+  <div class="todoListPage">
+    <h1>ToDoList</h1>
+    <!--待办输入框-->
+    <div class="todoInputBox">
+      <span>+</span>
+      <input type="text" placeholder="请输入代办事项" v-model="newToDo" @keyup.enter="addToDo" class="todoInput"/>
+    </div>
+    <!--代办列表-->
+    <ul>
+      <li v-for="item in filterTodoList" :key="item.id" @dblclick.stop="changeToDo(item)"
+          :class="{isEdit:item === modifiedItem}">
+        <div class="todoInput">
+          <button @click.stop="deleteToDo(item)">X</button>
+          <input type="checkbox" v-model="item.isDone">
+          <span :class="{doneTure:item.isDone}">{{ item.content }}</span>
+        </div>
+        <input
+            class="reviseInput"
+            type="text"
+            v-model="oldToDo"
+            v-todo-focus="item === modifiedItem"
+            @keyup.esc="serveChangeToDo(item)"
+            @blur="serveChangeToDo(item)"
+            @keyup.enter.stop="serveChangeToDo(item)">
+      </li>
+    </ul>
+    <div>
+      <button @click="filterTodo('all')">全部</button>
+      <button @click="filterTodo('DoneTrue')">已完成</button>
+      <button @click="filterTodo('DoneFalse')">未完成</button>
+    </div>
   </div>
 </template>
 
@@ -145,5 +151,49 @@ export default {
   display: none;
 }
 
+.todoListPage{
+  padding: 10vh 20vw;
+  h1{
+    color: #fff;
+    padding: 2vh 0;
+  }
+  input{
+    background: #181820;
+    border: 2px solid rgba(46, 46, 63, 0.92);
+    border-radius: 10px;
+    width: 100%;
+    //padding: 2vh 4vh;
+    height: 5vh;
+    text-indent: 2.5vw;
+  }
+  .todoInputBox{
+    position: relative;
+    span{
+      position: absolute;
+      display: block;
+      background: #fc76a1;
+      height: 3vh;
+      width: 3vh;
+      border-radius: 15%;
+      font-size: 3vh;
+      text-align: center;
+      line-height: 3vh;
+      top:50%;
+      transform: translateY(-50%);
+      left: 1.5vh;
+    }
+    input{
+      //padding:2vh 3vw;
+      font-size: 1.5vh;
+      color: white;
+    }
+  }
+  ul{
+    li{
+      margin-top: 1vh;
+      background: #21212b;
+    }
+  }
+}
 
 </style>
